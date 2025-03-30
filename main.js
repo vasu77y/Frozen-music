@@ -3,7 +3,7 @@ addEventListener('fetch', event => {
 });
 
 // Add your bot token here.
-const BOT_TOKEN = "Your_bot_token";
+const BOT_TOKEN = "7662582709:AAFUGBQJiFp25hIqiBqerptd9kIx3zd7zA8";
 
 //Pro people: don't change this else your bot will be fucked.
 const API_BASE_URL = "https://eligible-hilda-frozenbotspvt-ae522a1a.koyeb.app";
