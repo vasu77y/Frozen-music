@@ -2,23 +2,22 @@ addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
 });
 
-// Global constants and state
-const BOT_TOKEN = "7397430126:AAFgAYJ6HCL1Lbi9rDV2ezDCsgMyxgzVuBw";
-const API_BASE_URL = "https://selective-betty-vibeshiftbot-c3e1c19c.koyeb.app";
-// Replace with your assistant account's Telegram user ID.
+// Add your bot token here.
+const BOT_TOKEN = "Your_bot_token";
+
+//Pro people: don't change this else your bot will be fucked.
+const API_BASE_URL = "https://eligible-hilda-frozenbotspvt-ae522a1a.koyeb.app";
+
+//Pro people: don't change this else your bot will be fucked.
 const ASSISTANT_ID = "7049510852";
 
-// Global song queue and start messages storage
+
 let songQueue = [];
 let isPlaying = false;
-let startMessages = {}; // key: chatId, value: { message_id }
+let startMessages = {}; 
 
-// Store bot start time (for uptime)
 const botStartTime = Date.now();
 
-/**
- * Checks if a given user is an admin or the creator in a chat.
- */
 async function isUserAdmin(chatId, userId) {
   const url = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${encodeURIComponent(chatId)}&user_id=${encodeURIComponent(userId)}`;
   try {
@@ -33,9 +32,6 @@ async function isUserAdmin(chatId, userId) {
   }
 }
 
-/**
- * Returns an inline keyboard with playback control buttons.
- */
 function getPlaybackKeyboard() {
   return {
     inline_keyboard: [
@@ -49,9 +45,6 @@ function getPlaybackKeyboard() {
   };
 }
 
-/**
- * Returns an inline keyboard for queue messages.
- */
 function getQueueKeyboard() {
   return {
     inline_keyboard: [
@@ -63,9 +56,6 @@ function getQueueKeyboard() {
   };
 }
 
-/**
- * Sends a Telegram message with optional inline keyboard.
- */
 async function sendMessage(chatId, text, replyMarkup = null) {
   try {
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
@@ -88,9 +78,6 @@ async function sendMessage(chatId, text, replyMarkup = null) {
   }
 }
 
-/**
- * Sends a photo message with caption and optional inline keyboard.
- */
 async function sendPhoto(chatId, photoUrl, caption, replyMarkup = null) {
   try {
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
@@ -113,9 +100,6 @@ async function sendPhoto(chatId, photoUrl, caption, replyMarkup = null) {
   }
 }
 
-/**
- * Edits a text message.
- */
 async function editMessage(chatId, messageId, text, replyMarkup = null) {
   try {
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/editMessageText`;
@@ -138,9 +122,6 @@ async function editMessage(chatId, messageId, text, replyMarkup = null) {
   }
 }
 
-/**
- * Edits a photo message using the editMessageMedia endpoint.
- */
 async function editPhotoMessage(chatId, messageId, photoUrl, caption, replyMarkup = null) {
   try {
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/editMessageMedia`;
@@ -172,9 +153,6 @@ async function editPhotoMessage(chatId, messageId, photoUrl, caption, replyMarku
   }
 }
 
-/**
- * Updates a message by trying to edit it, and falling back to sending a new one if needed.
- */
 async function updateMessage(chatId, messageId, text, replyMarkup = null) {
   try {
     await editMessage(chatId, messageId, text, replyMarkup);
@@ -183,9 +161,7 @@ async function updateMessage(chatId, messageId, text, replyMarkup = null) {
   }
 }
 
-/**
- * Answers a callback query so Telegram removes the loading spinner.
- */
+
 async function answerCallback(callbackId, text = "") {
   try {
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`;
@@ -200,9 +176,7 @@ async function answerCallback(callbackId, text = "") {
   }
 }
 
-/**
- * Fetch wrapper with timeout.
- */
+
 async function fetchWithTimeout(url, options = {}, timeout = 20000) {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
@@ -216,9 +190,7 @@ async function fetchWithTimeout(url, options = {}, timeout = 20000) {
   }
 }
 
-/**
- * Ensures that the assistant is in the chat.
- */
+
 async function ensureAssistantInChat(chat) {
   const chatId = chat.id;
   const getMemberUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${encodeURIComponent(chatId)}&user_id=${encodeURIComponent(ASSISTANT_ID)}`;
@@ -239,10 +211,7 @@ async function ensureAssistantInChat(chat) {
   }
 }
 
-/**
- * Converts an ISO 8601 duration to a human-readable format.
- * FIX: Added a check for undefined duration to prevent calling .match on undefined.
- */
+
 function formatDuration(duration) {
   if (!duration) return "Unknown duration";
   const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
@@ -258,9 +227,7 @@ function formatDuration(duration) {
   return result.trim();
 }
 
-/**
- * Formats uptime (in seconds) into a human-readable string.
- */
+
 function formatUptime(seconds) {
   let hours = Math.floor(seconds / 3600);
   let minutes = Math.floor((seconds % 3600) / 60);
@@ -272,23 +239,72 @@ function formatUptime(seconds) {
   return result.trim();
 }
 
-/**
- * Uses the search API to fetch song details.
- */
+
+function secondsToISO8601(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  let iso = "PT";
+  if (h > 0) iso += h + "H";
+  if (m > 0) iso += m + "M";
+  if (s > 0) iso += s + "S";
+  return iso;
+}
+
+
 async function getSongDetails(title) {
-  const searchUrl = `https://sweet-boat-f94b.lagendplayersyt.workers.dev/search?title=${encodeURIComponent(title)}`;
+  const searchUrl = `https://jiosaavn-api.lagendplayersyt.workers.dev/api/search/songs?query=${encodeURIComponent(title)}`;
   try {
     const response = await fetchWithTimeout(searchUrl, {}, 20000);
     const data = await response.json();
-    return data;
+    if (!data.success) {
+      throw new Error("API call was not successful");
+    }
+    if (!data.data || !data.data.results || data.data.results.length === 0) {
+      throw new Error("No songs found");
+    }
+    
+    
+    const filteredResults = data.data.results.filter(song => {
+      return song.language && song.language.toLowerCase() !== "instrumental";
+    });
+    
+    if (filteredResults.length === 0) {
+      throw new Error("No non-instrumental songs found");
+    }
+    
+    const songResult = filteredResults[0];
+
+    
+    let durationISO = "PT0S";
+    if (songResult.duration) {
+      if (typeof songResult.duration === "number") {
+        durationISO = secondsToISO8601(songResult.duration);
+      } else if (typeof songResult.duration === "string") {
+        durationISO = songResult.duration;
+      }
+    }
+
+    
+    let thumbnail = null;
+if (songResult.image && songResult.image.length > 0) {
+  const bestImage = songResult.image.find(img => img.quality === "500x500") || songResult.image[0];
+  thumbnail = bestImage.url;
+}
+
+
+    return {
+      title: songResult.name,
+      link: songResult.url,
+      duration: durationISO,
+      thumbnail: thumbnail,
+    };
   } catch (error) {
     throw new Error("Error fetching song details: " + error.message);
   }
 }
 
-/**
- * Sends a queue message when a song is added to the queue.
- */
+
 async function sendQueueMessage(chatId, song, requester, queuePosition) {
   const queueButtons = getQueueKeyboard();
   // Show the queue number as (queuePosition + 1) while keeping backend indexing unchanged.
@@ -304,9 +320,7 @@ async function sendQueueMessage(chatId, song, requester, queuePosition) {
   }
 }
 
-/**
- * Deletes a Telegram message.
- */
+
 async function deleteMessage(chatId, messageId) {
   const url = `https://api.telegram.org/bot${BOT_TOKEN}/deleteMessage`;
   const payload = { chat_id: chatId, message_id: messageId };
@@ -328,9 +342,7 @@ async function deleteMessage(chatId, messageId) {
   }
 }
 
-/**
- * Plays a song. Marks isPlaying as true immediately.
- */
+
 async function playSong(chatId, song, processingMsg) {
   isPlaying = true; // Mark as playing immediately.
   const playUrl = `${API_BASE_URL}/play?chatid=${encodeURIComponent(chatId)}&title=${encodeURIComponent(song.title)}`;
@@ -361,39 +373,6 @@ async function playSong(chatId, song, processingMsg) {
   }
 }
 
-/**
- * Main request handler.
- * Also handles callback queries to control playback, show help, and the /start command.
- */
-async function vPlaySong(chatId, song, processingMsg) {
-  isPlaying = true; // Mark as playing immediately.
-  const vplayUrl = `${API_BASE_URL}/vplay?chatid=${encodeURIComponent(chatId)}&title=${encodeURIComponent(song.title)}`;
-  try {
-    const playResponse = await fetchWithTimeout(vplayUrl, {}, 20000);
-    const playData = await playResponse.json();
-    if (playResponse.ok) {
-      const keyboard = getPlaybackKeyboard();
-      keyboard.inline_keyboard.push([
-        { text: "✨ Updates ✨", url: "https://t.me/vibeshiftbots" },
-        { text: "💕 Support 💕", url: "https://t.me/Frozensupport1" }
-      ]);
-      const caption = `**ғʀᴏᴢᴇɴ ✘ ᴍᴜsɪᴄ ση sᴛʀєᴧϻɪηɢ ⏤͟͞●**\n\n` +
-                      `**❍ ᴛɪᴛʟє ➥** ${song.title}\n\n` +
-                      `**❍ ᴛɪᴍє ➥** ${song.humanDuration}\n\n` +
-                      `**❍ ʙʏ ➥** ${song.requester || "Unknown"}\n\n` +
-                      `**❍ video playback**`;
-      await sendPhoto(chatId, song.thumbnail, caption, keyboard);
-    } else {
-      await updateMessage(chatId, processingMsg.message_id, `Error playing video song: ${playData.error}`);
-    }
-  } catch (error) {
-    if (error.name === 'AbortError') {
-      await updateMessage(chatId, processingMsg.message_id, 'Timed out');
-    } else {
-      await updateMessage(chatId, processingMsg.message_id, `Error: ${error.message}`);
-    }
-  }
-}
 
 async function handleRequest(request) {
   if (request.method !== 'POST') {
@@ -407,14 +386,14 @@ async function handleRequest(request) {
     return new Response('Bad Request', { status: 400 });
   }
   
-  // Handle callback queries.
+
   if (updateData.callback_query) {
     const callback = updateData.callback_query;
     const chatId = callback.message.chat.id;
     const data = callback.data;
     const callbackId = callback.id;
     
-    // For admin-only commands in callback queries, check if user is admin.
+
     if (["resume", "pause", "skip", "stop"].includes(data)) {
       const isAdmin = await isUserAdmin(chatId, callback.from.id);
       if (!isAdmin) {
@@ -654,7 +633,7 @@ async function handleRequest(request) {
     return new Response('OK', { status: 200 });
   }
   
-  // Process messages (commands)
+
   if (!updateData.message || !updateData.message.text) {
     return new Response('OK', { status: 200 });
   }
@@ -665,7 +644,7 @@ async function handleRequest(request) {
   const chatId = chat.id;
   let processingMsg;
   
-  // ===== Check for "stream ended" notification using target chat id from message =====
+
   const streamEndedRegex = /Stream ended in chat id (-?\d+)/;
   const match = text.match(streamEndedRegex);
   if (match) {
@@ -692,7 +671,7 @@ async function handleRequest(request) {
     return new Response('OK', { status: 200 });
   }
   
-  // For admin-only commands in text messages, check if the user is admin.
+
   if (["/pause", "/resume", "/skip", "/stop", "/end"].some(cmd => text.startsWith(cmd))) {
     const isAdmin = await isUserAdmin(chatId, message.from.id);
     if (!isAdmin) {
@@ -701,7 +680,7 @@ async function handleRequest(request) {
     }
   }
   
-  // Handle /start command
+
   if (text.startsWith('/start')) {
     try {
       const uptimeSeconds = Math.floor((Date.now() - botStartTime) / 1000);
@@ -749,59 +728,17 @@ async function handleRequest(request) {
     return new Response('OK', { status: 200 });
   }
   
-  // For other commands, send a processing message.
+
   try {
-    if (['/play', '/vplay', '/stop', '/pause', '/resume', '/skip', '/end'].some(cmd => text.startsWith(cmd))) {
+    if (['/play', '/stop', '/pause', '/resume', '/skip', '/end'].some(cmd => text.startsWith(cmd))) {
       processingMsg = await sendMessage(chatId, 'Processing...');
     }
   } catch (error) {
     console.error("Error sending processing message:", error);
   }
   
-  // Handle /vplay command
-  if (text.startsWith('/vplay')) {
-    const parts = text.split(' ');
-    if (parts.length < 2) {
-      if (processingMsg) {
-        await updateMessage(chatId, processingMsg.message_id, 'Please provide a song title. Usage: /vplay <song name>');
-      } else {
-        await sendMessage(chatId, 'Please provide a song title. Usage: /vplay <song name>');
-      }
-      return new Response('OK', { status: 200 });
-    }
-    const queryTitle = parts.slice(1).join(' ');
-    try {
-      await ensureAssistantInChat(chat);
-      const songData = await getSongDetails(queryTitle);
-      const durationValue = songData.duration || "PT0S";
-      const humanDuration = formatDuration(durationValue);
-      const song = {
-        title: songData.title,
-        link: songData.link,
-        duration: songData.duration,
-        humanDuration: humanDuration,
-        thumbnail: songData.thumbnail,
-        requester: message.from ? message.from.first_name : "Unknown"
-      };
 
-      if (!isPlaying) {
-        isPlaying = true;
-        await vPlaySong(chatId, song, processingMsg);
-      } else {
-        songQueue.push({ song, chatId, processingMsg });
-        await sendQueueMessage(chatId, song, song.requester, songQueue.length - 1);
-        await updateMessage(chatId, processingMsg.message_id, "");
-      }
-    } catch (error) {
-      if (error.name === 'AbortError') {
-        await updateMessage(chatId, processingMsg.message_id, 'Timed out while searching for the song');
-      } else {
-        await updateMessage(chatId, processingMsg.message_id, `Error: ${error.message}`);
-      }
-    }
-  }
-  // Handle /play command
-  else if (text.startsWith('/play')) {
+  if (text.startsWith('/play')) {
     const parts = text.split(' ');
     if (parts.length < 2) {
       if (processingMsg) {
@@ -931,3 +868,4 @@ async function handleRequest(request) {
   
   return new Response('OK', { status: 200 });
 }
+
