@@ -599,7 +599,7 @@ async function handleRequest(request) {
       const userMention = callback.from && callback.from.first_name ? callback.from.first_name : "there";
       const caption = (
         `👋 нєу ${userMention} 💠, 🥀\n\n` +
-        "🎶 Wᴇʟᴄᴏᴍᴇ ᴛᴏ Fʀᴏᴢᴇɴ 🥀 ᴍᴜsɪᴄ! 🎵\n\n" +
+        "🎶 Wᴇʟᴄᴏᴍᴇ ᴛᴏ anamika 🥀 ᴍᴜsɪᴄ! 🎵\n\n" +
         "➻ 🚀 A Sᴜᴘᴇʀғᴀsᴛ & Pᴏᴡᴇʀғᴜʟ Tᴇʟᴇɢʀᴀᴍ Mᴜsɪᴄ Bᴏᴛ ᴡɪᴛʜ ᴀᴍᴀᴢɪɴɢ ғᴇᴀᴛᴜʀᴇs. ✨\n\n" +
         "🎧 Sᴜᴘᴘᴏʀᴛᴇᴅ Pʟᴀᴛғᴏʀᴍs: ʏᴏᴜᴛᴜʙᴇ, sᴘᴏᴛɪғʏ, ʀᴇssᴏ, ᴀᴘᴘʟᴇ ᴍᴜsɪᴄ, sᴏᴜɴᴅᴄʟᴏᴜᴅ.\n\n" +
         "🔹 Kᴇʏ Fᴇᴀᴛᴜʀᴇs:\n" +
@@ -615,8 +615,8 @@ async function handleRequest(request) {
       const buttons = {
         inline_keyboard: [
           [
-            { text: "➕ Add me", url: "https://t.me/vcmusiclubot?startgroup=true" },
-            { text: "💬 Support", url: "https://t.me/Frozensupport1" }
+            { text: "➕ Add me", url: "https://t.me/anamika_support_group?startgroup=true" },
+            { text: "💬 Support", url: "https://t.me/anamika_support_group" }
           ],
           [
             { text: "❓ Help", callback_data: "show_help" }
@@ -687,7 +687,7 @@ async function handleRequest(request) {
       const userMention = message.from ? message.from.first_name : "there";
       const caption = (
         `👋 нєу ${userMention} 💠, 🥀\n\n` +
-        "🎶 Wᴇʟᴄᴏᴍᴇ ᴛᴏ Fʀᴏᴢᴇɴ 🥀 ᴍᴜsɪᴄ! 🎵\n\n" +
+        "🎶 Wᴇʟᴄᴏᴍᴇ ᴛᴏ anamika 🥀 ᴍᴜsɪᴄ! 🎵\n\n" +
         "➻ 🚀 A Sᴜᴘᴇʀғᴀsᴛ & Pᴏᴡᴇʀғᴜʟ Tᴇʟᴇɢʀᴀᴍ Mᴜsɪᴄ Bᴏᴛ ᴡɪᴛʜ ᴀᴍᴀᴢɪɴɢ ғᴇᴀᴛᴜʀᴇs. ✨\n\n" +
         "🎧 Sᴜᴘᴘᴏʀᴛᴇᴅ Pʟᴀᴛғᴏʀᴍs: ʏᴏᴜᴛᴜʙᴇ, sᴘᴏᴛɪғʏ, ʀᴇssᴏ, ᴀᴘᴘʟᴇ ᴍᴜsɪᴄ, sᴏᴜɴᴅᴄʟᴏᴜᴅ.\n\n" +
         "🔹 Kᴇʏ Fᴇᴀᴛᴜʀᴇs:\n" +
@@ -703,8 +703,8 @@ async function handleRequest(request) {
       const buttons = {
         inline_keyboard: [
           [
-            { text: "➕ Add me", url: "https://t.me/vcmusiclubot?startgroup=true" },
-            { text: "💬 Support", url: "https://t.me/Frozensupport1" }
+            { text: "➕ Add me", url: "https://t.me/anamika_support_group?startgroup=true" },
+            { text: "💬 Support", url: "https://t.me/anamika_support_group" }
           ],
           [
             { text: "❓ Help", callback_data: "show_help" }
