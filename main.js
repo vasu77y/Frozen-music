@@ -352,8 +352,8 @@ async function playSong(chatId, song, processingMsg) {
     if (playResponse.ok) {
       const keyboard = getPlaybackKeyboard();
       keyboard.inline_keyboard.push([
-        { text: "✨ Updates ✨", url: "https://t.me/vibeshiftbots" },
-        { text: "💕 Support 💕", url: "https://t.me/Frozensupport1" }
+        { text: "✨ Updates ✨", url: "https://t.me/anamika_support_group" },
+        { text: "💕 Support 💕", url: "https://t.me/anamika_support_group" }
       ]);
       const caption = `**ғʀᴏᴢᴇɴ ✘ ᴍᴜsɪᴄ ση sᴛʀєᴧϻɪηɢ ⏤͟͞●**\n\n` +
                       `**❍ ᴛɪᴛʟє ➥** ${song.title}\n\n` +
