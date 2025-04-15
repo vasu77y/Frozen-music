@@ -615,7 +615,7 @@ async function handleRequest(request) {
       const buttons = {
         inline_keyboard: [
           [
-            { text: "➕ Add me", url: "https://t.me/anamika_support_group?startgroup=true" },
+            { text: "➕ Add me", url:https://t.me/Musicbot_782bot?startgroup=true" },
             { text: "💬 Support", url: "https://t.me/anamika_support_group" }
           ],
           [
@@ -703,7 +703,7 @@ async function handleRequest(request) {
       const buttons = {
         inline_keyboard: [
           [
-            { text: "➕ Add me", url: "https://t.me/anamika_support_group?startgroup=true" },
+            { text: "➕ Add me", url: "https://t.me/Musicbot_782bot?startgroup=true" },
             { text: "💬 Support", url: "https://t.me/anamika_support_group" }
           ],
           [
